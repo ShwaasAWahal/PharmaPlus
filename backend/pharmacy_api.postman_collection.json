@@ -1,0 +1,419 @@
+{
+  "info": {
+    "name": "AI Pharmacy Management API",
+    "description": "Complete REST API for AI-Powered Pharmacy Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000" },
+    { "key": "access_token", "value": "" },
+    { "key": "refresh_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@pharmacy.com\",\n  \"password\": \"Admin@1234\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register User (Admin only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Jane Pharmacist\",\n  \"email\": \"jane@pharmacy.com\",\n  \"password\": \"Pass@1234\",\n  \"role\": \"pharmacist\",\n  \"branch_id\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/auth/me"
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{refresh_token}}" }],
+            "url": "{{base_url}}/api/auth/refresh"
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/auth/me/password",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"old_password\": \"Admin@1234\",\n  \"new_password\": \"NewPass@5678\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Medicines",
+      "item": [
+        {
+          "name": "List Medicines",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/medicines?page=1&per_page=20&q=paracetamol",
+              "host": ["{{base_url}}"],
+              "path": ["api", "medicines"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "per_page", "value": "20" },
+                { "key": "q", "value": "paracetamol" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Medicine",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/medicines",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Paracetamol\",\n  \"generic_name\": \"Acetaminophen\",\n  \"brand\": \"Crocin\",\n  \"category\": \"Analgesic\",\n  \"form\": \"Tablet\",\n  \"strength\": \"500mg\",\n  \"unit\": \"strip\",\n  \"barcode\": \"8901234567890\",\n  \"purchase_price\": 8.50,\n  \"selling_price\": 12.00,\n  \"mrp\": 15.00,\n  \"tax_percent\": 5.0,\n  \"requires_prescription\": false,\n  \"supplier_id\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Medicine",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/medicines/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selling_price\": 14.00,\n  \"mrp\": 16.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Scan Barcode",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/medicines/barcode/scan",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"barcode\": \"8901234567890\",\n  \"branch_id\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Add Supplier",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/medicines/suppliers",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sun Pharma Distributors\",\n  \"contact_person\": \"Raj Kumar\",\n  \"phone\": \"9876543210\",\n  \"email\": \"raj@sunpharma.com\",\n  \"payment_terms\": \"Net 30\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Add Branch",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/medicines/branches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Downtown Branch\",\n  \"address\": \"456 Park Avenue, Mumbai\",\n  \"phone\": \"0221234567\",\n  \"email\": \"downtown@pharmacy.com\",\n  \"license_number\": \"MH-PHARM-002\",\n  \"manager_name\": \"Priya Sharma\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "List Inventory",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/inventory?branch_id=1&include_expired=false",
+              "host": ["{{base_url}}"],
+              "path": ["api", "inventory"],
+              "query": [
+                { "key": "branch_id", "value": "1" },
+                { "key": "include_expired", "value": "false" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Inventory Batch",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/inventory",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medicine_id\": 1,\n  \"branch_id\": 1,\n  \"batch_number\": \"BATCH-2024-001\",\n  \"quantity\": 500,\n  \"expiry_date\": \"2026-06-30\",\n  \"manufacture_date\": \"2024-06-01\",\n  \"purchase_price\": 8.50,\n  \"selling_price\": 12.00,\n  \"low_stock_threshold\": 20,\n  \"location\": \"Shelf A-3\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Adjust Stock",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/inventory/1/adjust",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"delta\": -5,\n  \"reason\": \"damaged stock removed\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Expiring Soon",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/inventory/alerts/expiring?days=30&branch_id=1"
+          }
+        },
+        {
+          "name": "Low Stock",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/inventory/alerts/low-stock?branch_id=1"
+          }
+        },
+        {
+          "name": "Expired Stock",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/inventory/alerts/expired"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Billing",
+      "item": [
+        {
+          "name": "Create Bill",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/billing/bills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"branch_id\": 1,\n  \"customer_name\": \"Amit Shah\",\n  \"customer_phone\": \"9898989898\",\n  \"customer_age\": 35,\n  \"discount_percent\": 5,\n  \"payment_method\": \"cash\",\n  \"amount_paid\": 200,\n  \"items\": [\n    {\n      \"medicine_id\": 1,\n      \"inventory_id\": 1,\n      \"quantity\": 3,\n      \"unit_price\": 12.00,\n      \"discount_percent\": 0,\n      \"tax_percent\": 5\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "List Bills",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/billing/bills?branch_id=1&page=1&per_page=20"
+          }
+        },
+        {
+          "name": "Get Invoice JSON",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/billing/bills/1/invoice"
+          }
+        },
+        {
+          "name": "Upload Prescription",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/billing/prescription/upload",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": "/path/to/prescription.jpg" },
+                { "key": "branch_id", "value": "1" },
+                { "key": "patient_name", "value": "Ravi Mehta" },
+                { "key": "patient_age", "value": "42" },
+                { "key": "patient_phone", "value": "9876500000" },
+                { "key": "doctor_name", "value": "Dr. Patel" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Dashboard Summary",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/analytics/summary?branch_id=1"
+          }
+        },
+        {
+          "name": "Top Medicines",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/analytics/top-medicines?days=30&limit=10&branch_id=1"
+          }
+        },
+        {
+          "name": "Monthly Revenue",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/analytics/monthly-revenue?months=12&branch_id=1"
+          }
+        },
+        {
+          "name": "Expired Stock Report",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/analytics/expired-stock"
+          }
+        },
+        {
+          "name": "Supplier Performance",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/analytics/supplier-performance"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ML Integration",
+      "item": [
+        {
+          "name": "Predict Demand",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/ml/predict-demand",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medicine_id\": 1,\n  \"branch_id\": 1,\n  \"horizon_days\": 30\n}"
+            }
+          }
+        },
+        {
+          "name": "Recommend Generic",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/ml/recommend-generic",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brand_medicine_name\": \"Augmentin 625\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process Prescription",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/api/ml/process-prescription",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prescription_id\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "ML Service Status",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/api/ml/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/health"
+          }
+        }
+      ]
+    }
+  ]
+}
